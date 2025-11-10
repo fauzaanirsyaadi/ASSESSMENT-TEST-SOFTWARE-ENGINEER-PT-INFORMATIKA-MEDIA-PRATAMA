@@ -54,12 +54,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push('/posts');
   };
 
-  const logout = () => {
-    api.post('/logout').finally(() => {
-        localStorage.removeItem('auth_token');
-        setUser(null);
-        router.push('/login');
-    });
+  const logout = async () => {
+    try {
+      await api.post('/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('auth_token');
+      setUser(null);
+      router.push('/login');
+    }
   };
 
   return (

@@ -34,6 +34,7 @@ class PostController extends Controller
         ]);
 
         $post = $request->user()->posts()->create($validated);
+        $post->load('user:id,name,email');
 
         return response()->json($post, 201);
     }
@@ -62,6 +63,7 @@ class PostController extends Controller
         ]);
 
         $post->update($validated);
+        $post->load('user:id,name,email');
 
         return response()->json($post);
     }

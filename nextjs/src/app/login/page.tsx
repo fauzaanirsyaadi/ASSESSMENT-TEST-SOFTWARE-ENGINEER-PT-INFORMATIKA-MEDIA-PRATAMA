@@ -19,8 +19,15 @@ export default function LoginPage() {
             toast.success('Successfully logged in!');
             // Redirect is handled by the AuthProvider
         } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Login failed. Please check your credentials.';
-            toast.error(errorMessage);
+            // Handle validation errors from Laravel
+            if (error.response?.data?.errors) {
+                const errors = error.response.data.errors;
+                Object.values(errors).flat().forEach((err: any) => toast.error(err));
+            } else if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error('Login failed. Please check your credentials.');
+            }
             setIsLoading(false);
         }
     };
